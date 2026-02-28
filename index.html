@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>AI Balance - Learn Responsibly</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="content">
+                <div class="logo">
+                    <i class="fas fa-scale-balanced"></i>
+                    <h1>AI Balance</h1>
+                    <p class="tagline">Learn Responsibly</p>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="Your Name" class="input-field">
+                </div>
+                <div class="input-group">
+                    <select id="grade-level" class="input-field">
+                        <option value="">Select Grade Level</option>
+                        <option value="elementary">Elementary School</option>
+                        <option value="middle">Middle School</option>
+                        <option value="high">High School</option>
+                        <option value="college">College</option>
+                        <option value="adult">Adult Learning</option>
+                    </select>
+                </div>
+                <button id="start-btn" class="btn primary-btn" disabled>Start Learning</button>
+                <p class="version">v1.0 - Empty Knowledge Base</p>
+            </div>
+        </div>
+
+        <!-- Subjects Screen -->
+        <div id="subjects-screen" class="screen">
+            <div class="header">
+                <button class="icon-btn back-btn"><i class="fas fa-arrow-left"></i></button>
+                <h2>Your Subjects</h2>
+                <div class="placeholder"></div>
+            </div>
+            <div class="content">
+                <div class="add-subject">
+                    <input type="text" id="new-subject" placeholder="Add subject (e.g., Biology)" class="input-field">
+                    <button id="add-subject-btn" class="btn small-btn"><i class="fas fa-plus"></i> Add</button>
+                </div>
+                <div id="subjects-list" class="subjects-list">
+                    <!-- Subjects will be added here -->
+                </div>
+                <button id="continue-dashboard" class="btn primary-btn" disabled>Continue to Dashboard</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen">
+            <div class="header">
+                <h2>Dashboard</h2>
+                <div class="points-display">
+                    <i class="fas fa-star"></i>
+                    <span id="points">0</span>
+                </div>
+            </div>
+            <div class="content">
+                <div class="stats-card">
+                    <div class="stat-item">
+                        <span class="stat-label">Subjects</span>
+                        <span class="stat-value" id="subject-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Searches</span>
+                        <span class="stat-value" id="search-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Badges</span>
+                        <span class="stat-value" id="badge-count">0</span>
+                    </div>
+                </div>
+
+                <div class="menu-grid">
+                    <div class="menu-card" data-screen="thinkfirst">
+                        <i class="fas fa-brain"></i>
+                        <span>Think First</span>
+                    </div>
+                    <div class="menu-card" data-screen="assessment">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Assessment</span>
+                    </div>
+                    <div class="menu-card" data-screen="progress">
+                        <i class="fas fa-trophy"></i>
+                        <span>Progress</span>
+                    </div>
+                    <div class="menu-card" data-screen="subjects">
+                        <i class="fas fa-book"></i>
+                        <span>Subjects</span>
+                    </div>
+                </div>
+
+                <div id="recent-activity" class="activity-card">
+                    <h3>Recent Activity</h3>
+                    <div id="activity-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Think First Screen -->
+        <div id="thinkfirst-screen" class="screen">
+            <div class="header">
+                <button class="icon-btn back-btn"><i class="fas fa-arrow-left"></i></button>
+                <h2>Think First Mode</h2>
+                <div class="placeholder"></div>
+            </div>
+            <div class="content">
+                <div class="input-group">
+                    <select id="think-subject" class="input-field">
+                        <option value="">Select Subject</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <input type="text" id="think-query" placeholder="What do you want to learn?" class="input-field">
+                </div>
+
+                <div class="think-section">
+                    <h3>🤔 YOUR ANSWER FIRST</h3>
+                    <textarea id="user-answer" placeholder="Write what YOU think before seeing information..." rows="4"></textarea>
+                    <button id="submit-answer" class="btn success-btn"><i class="fas fa-check"></i> Submit My Answer</button>
+                </div>
+
+                <button id="search-info" class="btn primary-btn"><i class="fas fa-search"></i> Get Information</button>
+
+                <div id="info-result" class="info-card" style="display: none;">
+                    <h3 id="info-title"></h3>
+                    <p id="info-content"></p>
+                    <small id="info-source"></small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment Screen -->
+        <div id="assessment-screen" class="screen">
+            <div class="header">
+                <button class="icon-btn back-btn"><i class="fas fa-arrow-left"></i></button>
+                <h2>Self Assessment</h2>
+                <div class="placeholder"></div>
+            </div>
+            <div class="content">
+                <div class="progress-indicator">
+                    <span id="question-num">1/7</span>
+                </div>
+                <div id="question-container">
+                    <p id="question-text" class="question-text"></p>
+                    <div id="answers-grid" class="answers-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Screen -->
+        <div id="progress-screen" class="screen">
+            <div class="header">
+                <button class="icon-btn back-btn"><i class="fas fa-arrow-left"></i></button>
+                <h2>Your Progress</h2>
+                <div class="placeholder"></div>
+            </div>
+            <div class="content">
+                <div class="points-badge">
+                    <i class="fas fa-star"></i>
+                    <span id="total-points">0</span>
+                    <span>Total Points</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-book-open"></i>
+                        <span class="stat-big" id="total-subjects">0</span>
+                        <span>Subjects</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-search"></i>
+                        <span class="stat-big" id="total-searches">0</span>
+                        <span>Searches</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-pen"></i>
+                        <span class="stat-big" id="total-reflections">0</span>
+                        <span>Reflections</span>
+                    </div>
+                </div>
+
+                <div id="badges-container" class="badges-container">
+                    <h3>🏆 Earned Badges</h3>
+                    <div id="badges-list" class="badges-list"></div>
+                </div>
+
+                <div id="recent-reflections" class="recent-section">
+                    <h3>Recent Reflections</h3>
+                    <div id="reflections-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reflection Popup Modal -->
+    <div id="reflection-modal" class="modal">
+        <div class="modal-content">
+            <h3>Reflection Time</h3>
+            <p>Compare your answer with the information above. What did you learn?</p>
+            <textarea id="reflection-text" placeholder="Write your reflection..." rows="4"></textarea>
+            <div class="modal-buttons">
+                <button id="save-reflection" class="btn success-btn">Save Reflection</button>
+                <button id="skip-reflection" class="btn secondary-btn">Skip</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assessment Results Modal -->
+    <div id="results-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="result-title"></h3>
+            <p id="result-message"></p>
+            <p id="result-points"></p>
+            <button id="close-results" class="btn primary-btn">Continue</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
