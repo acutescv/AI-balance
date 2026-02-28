@@ -4,55 +4,309 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>AI Balance - Learn Responsibly</title>
-    <link rel="stylesheet" href="style.css"> <!-- Font Awesome for icons -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #e0f2fe 0%, #dcfce7 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+
+        .app-container {
+            max-width: 400px;
+            width: 100%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -8px rgba(0,0,0,0.2);
+            overflow: hidden;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Header */
+        .header {
+            padding: 16px 20px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            color: #1e3a8a;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .points-badge {
+            background: #fbbf24;
+            color: #1e3a8a;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #1e3a8a;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+
+        /* Buttons */
+        .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Inputs */
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        /* Subject List */
+        .subject-item {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .subject-item button {
+            background: #fee2e2;
+            border: none;
+            color: #dc2626;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .menu-item {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+
+        .menu-item i {
+            font-size: 2rem;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            width: 90%;
+            max-width: 350px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Badges */
+        .badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin: 4px;
+        }
+    </style>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-container">
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="screen active">
-            <div class="content">
-                <div class="logo">
-                    <i class="fas fa-scale-balanced"></i>
-                    <h1>AI Balance</h1>
-                    <p class="tagline">Learn Responsibly</p>
+            <div class="content" style="display: flex; flex-direction: column; justify-content: center;">
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <i class="fas fa-scale-balanced" style="font-size: 5rem; color: #2563eb;"></i>
+                    <h1 style="color: #1e3a8a; margin-top: 16px;">AI Balance</h1>
+                    <p style="color: #16a34a;">Learn Responsibly</p>
                 </div>
-                <div class="input-group">
-                    <input type="text" id="username" placeholder="Your Name" class="input-field">
-                </div>
-                <div class="input-group">
-                    <select id="grade-level" class="input-field">
-                        <option value="">Select Grade Level</option>
-                        <option value="elementary">Elementary School</option>
-                        <option value="middle">Middle School</option>
-                        <option value="high">High School</option>
-                        <option value="college">College</option>
-                        <option value="adult">Adult Learning</option>
-                    </select>
-                </div>
-                <button id="start-btn" class="btn primary-btn" disabled>Start Learning</button>
-                <p class="version">v1.0 - Empty Knowledge Base</p>
+                <input type="text" id="username" class="input-field" placeholder="Your Name">
+                <select id="grade" class="input-field">
+                    <option value="">Select Grade Level</option>
+                    <option value="elementary">Elementary School</option>
+                    <option value="middle">Middle School</option>
+                    <option value="high">High School</option>
+                    <option value="college">College</option>
+                </select>
+                <button id="start-btn" class="btn btn-primary" disabled>Start Learning</button>
             </div>
         </div>
 
         <!-- Subjects Screen -->
         <div id="subjects-screen" class="screen">
             <div class="header">
-                <button class="icon-btn back-btn"><i class="fas fa-arrow-left"></i></button>
+                <button class="back-btn"><i class="fas fa-arrow-left"></i></button>
                 <h2>Your Subjects</h2>
-                <div class="placeholder"></div>
+                <div style="width: 40px;"></div>
             </div>
             <div class="content">
-                <div class="add-subject">
-                    <input type="text" id="new-subject" placeholder="Add subject (e.g., Biology)" class="input-field">
-                    <button id="add-subject-btn" class="btn small-btn"><i class="fas fa-plus"></i> Add</button>
+                <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+                    <input type="text" id="new-subject" class="input-field" placeholder="Add subject..." style="margin: 0;">
+                    <button id="add-subject" class="btn btn-primary" style="width: auto; margin: 0;">Add</button>
                 </div>
-                <div id="subjects-list" class="subjects-list">
-                    <!-- Subjects will be added here -->
-                </div>
-                <button id="continue-dashboard" class="btn primary-btn" disabled>Continue to Dashboard</button>
+                <div id="subjects-list"></div>
+                <button id="continue-to-dashboard" class="btn btn-success" disabled>Continue</button>
             </div>
         </div>
 
@@ -60,49 +314,49 @@
         <div id="dashboard-screen" class="screen">
             <div class="header">
                 <h2>Dashboard</h2>
-                <div class="points-display">
+                <div class="points-badge">
                     <i class="fas fa-star"></i>
                     <span id="points">0</span>
                 </div>
             </div>
             <div class="content">
-                <div class="stats-card">
-                    <div class="stat-item">
-                        <span class="stat-label">Subjects</span>
-                        <span class="stat-value" id="subject-count">0</span>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <span class="stat-number" id="stat-subjects">0</span>
+                        <div>Subjects</div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Searches</span>
-                        <span class="stat-value" id="search-count">0</span>
+                    <div class="stat-box">
+                        <span class="stat-number" id="stat-searches">0</span>
+                        <div>Searches</div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Badges</span>
-                        <span class="stat-value" id="badge-count">0</span>
+                    <div class="stat-box">
+                        <span class="stat-number" id="stat-badges">0</span>
+                        <div>Badges</div>
                     </div>
                 </div>
 
                 <div class="menu-grid">
-                    <div class="menu-card" data-screen="thinkfirst">
+                    <div class="menu-item" onclick="changeScreen('thinkfirst')">
                         <i class="fas fa-brain"></i>
-                        <span>Think First</span>
+                        <div>Think First</div>
                     </div>
-                    <div class="menu-card" data-screen="assessment">
+                    <div class="menu-item" onclick="changeScreen('assessment')">
                         <i class="fas fa-clipboard-list"></i>
-                        <span>Assessment</span>
+                        <div>Assessment</div>
                     </div>
-                    <div class="menu-card" data-screen="progress">
+                    <div class="menu-item" onclick="changeScreen('progress')">
                         <i class="fas fa-trophy"></i>
-                        <span>Progress</span>
+                        <div>Progress</div>
                     </div>
-                    <div class="menu-card" data-screen="subjects">
+                    <div class="menu-item" onclick="changeScreen('subjects')">
                         <i class="fas fa-book"></i>
-                        <span>Subjects</span>
+                        <div>Subjects</div>
                     </div>
                 </div>
 
-                <div id="recent-activity" class="activity-card">
-                    <h3>Recent Activity</h3>
-                    <div id="activity-list"></div>
+                <div class="card">
+                    <h3 style="margin-bottom: 12px;">Recent Activity</h3>
+                    <div id="recent-activity">No activity yet</div>
                 </div>
             </div>
         </div>
@@ -110,33 +364,31 @@
         <!-- Think First Screen -->
         <div id="thinkfirst-screen" class="screen">
             <div class="header">
-                <button class="icon-btn back-btn"><i class="fas fa-arrow-left"></i></button>
-                <h2>Think First Mode</h2>
-                <div class="placeholder"></div>
+                <button class="back-btn"><i class="fas fa-arrow-left"></i></button>
+                <h2>Think First</h2>
+                <div style="width: 40px;"></div>
             </div>
             <div class="content">
-                <div class="input-group">
-                    <select id="think-subject" class="input-field">
-                        <option value="">Select Subject</option>
-                    </select>
-                </div>
+                <select id="think-subject" class="input-field">
+                    <option value="">Select Subject</option>
+                </select>
                 
-                <div class="input-group">
-                    <input type="text" id="think-query" placeholder="What do you want to learn?" class="input-field">
+                <input type="text" id="think-query" class="input-field" placeholder="What do you want to learn?">
+
+                <div class="card" style="background: #dcfce7;">
+                    <h3 style="color: #166534; margin-bottom: 8px;">🤔 YOUR ANSWER FIRST</h3>
+                    <textarea id="user-answer" class="input-field" rows="4" placeholder="Write your answer before seeing information..." style="margin-bottom: 8px;"></textarea>
+                    <button id="submit-answer" class="btn btn-success">Submit My Answer</button>
                 </div>
 
-                <div class="think-section">
-                    <h3>🤔 YOUR ANSWER FIRST</h3>
-                    <textarea id="user-answer" placeholder="Write what YOU think before seeing information..." rows="4"></textarea>
-                    <button id="submit-answer" class="btn success-btn"><i class="fas fa-check"></i> Submit My Answer</button>
-                </div>
+                <button id="search-knowledge" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Get Information
+                </button>
 
-                <button id="search-info" class="btn primary-btn"><i class="fas fa-search"></i> Get Information</button>
-
-                <div id="info-result" class="info-card" style="display: none;">
-                    <h3 id="info-title"></h3>
-                    <p id="info-content"></p>
-                    <small id="info-source"></small>
+                <div id="info-result" style="display: none;" class="card">
+                    <h3 id="info-title" style="color: #2563eb;"></h3>
+                    <p id="info-content" style="margin: 12px 0; line-height: 1.6;"></p>
+                    <small id="info-source" style="color: #64748b;"></small>
                 </div>
             </div>
         </div>
@@ -144,17 +396,17 @@
         <!-- Assessment Screen -->
         <div id="assessment-screen" class="screen">
             <div class="header">
-                <button class="icon-btn back-btn"><i class="fas fa-arrow-left"></i></button>
-                <h2>Self Assessment</h2>
-                <div class="placeholder"></div>
+                <button class="back-btn"><i class="fas fa-arrow-left"></i></button>
+                <h2>Assessment</h2>
+                <div style="width: 40px;"></div>
             </div>
             <div class="content">
-                <div class="progress-indicator">
-                    <span id="question-num">1/7</span>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <span style="background: #2563eb; color: white; padding: 8px 24px; border-radius: 20px;" id="question-counter">1/7</span>
                 </div>
-                <div id="question-container">
-                    <p id="question-text" class="question-text"></p>
-                    <div id="answers-grid" class="answers-grid"></div>
+                <div class="card">
+                    <p id="question-text" style="font-size: 1.2rem; text-align: center; margin-bottom: 24px;"></p>
+                    <div id="answer-buttons" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;"></div>
                 </div>
             </div>
         </div>
@@ -162,71 +414,510 @@
         <!-- Progress Screen -->
         <div id="progress-screen" class="screen">
             <div class="header">
-                <button class="icon-btn back-btn"><i class="fas fa-arrow-left"></i></button>
-                <h2>Your Progress</h2>
-                <div class="placeholder"></div>
+                <button class="back-btn"><i class="fas fa-arrow-left"></i></button>
+                <h2>Progress</h2>
+                <div style="width: 40px;"></div>
             </div>
             <div class="content">
-                <div class="points-badge">
-                    <i class="fas fa-star"></i>
-                    <span id="total-points">0</span>
-                    <span>Total Points</span>
+                <div class="card" style="text-align: center; background: linear-gradient(145deg, #fbbf24, #f59e0b); color: white;">
+                    <i class="fas fa-star" style="font-size: 3rem;"></i>
+                    <div style="font-size: 3rem; font-weight: 700;" id="total-points">0</div>
+                    <div>Total Points</div>
                 </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <i class="fas fa-book-open"></i>
-                        <span class="stat-big" id="total-subjects">0</span>
-                        <span>Subjects</span>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <span class="stat-number" id="total-subjects">0</span>
+                        <div>Subjects</div>
                     </div>
-                    <div class="stat-card">
-                        <i class="fas fa-search"></i>
-                        <span class="stat-big" id="total-searches">0</span>
-                        <span>Searches</span>
+                    <div class="stat-box">
+                        <span class="stat-number" id="total-searches">0</span>
+                        <div>Searches</div>
                     </div>
-                    <div class="stat-card">
-                        <i class="fas fa-pen"></i>
-                        <span class="stat-big" id="total-reflections">0</span>
-                        <span>Reflections</span>
+                    <div class="stat-box">
+                        <span class="stat-number" id="total-reflections">0</span>
+                        <div>Reflections</div>
                     </div>
                 </div>
 
-                <div id="badges-container" class="badges-container">
-                    <h3>🏆 Earned Badges</h3>
-                    <div id="badges-list" class="badges-list"></div>
-                </div>
-
-                <div id="recent-reflections" class="recent-section">
-                    <h3>Recent Reflections</h3>
-                    <div id="reflections-list"></div>
+                <div class="card">
+                    <h3 style="margin-bottom: 12px;">🏆 Badges Earned</h3>
+                    <div id="badges-list"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Reflection Popup Modal -->
+    <!-- Reflection Modal -->
     <div id="reflection-modal" class="modal">
         <div class="modal-content">
-            <h3>Reflection Time</h3>
-            <p>Compare your answer with the information above. What did you learn?</p>
-            <textarea id="reflection-text" placeholder="Write your reflection..." rows="4"></textarea>
-            <div class="modal-buttons">
-                <button id="save-reflection" class="btn success-btn">Save Reflection</button>
-                <button id="skip-reflection" class="btn secondary-btn">Skip</button>
-            </div>
+            <h3 style="color: #2563eb; margin-bottom: 12px;">Reflection Time</h3>
+            <p style="margin-bottom: 16px;">Compare your answer with the information. What did you learn?</p>
+            <textarea id="reflection-input" class="input-field" rows="4" placeholder="Write your reflection..."></textarea>
+            <button id="save-reflection" class="btn btn-success">Save Reflection</button>
+            <button id="skip-reflection" class="btn" style="background: #e2e8f0; margin-top: 8px;">Skip</button>
         </div>
     </div>
 
     <!-- Assessment Results Modal -->
     <div id="results-modal" class="modal">
         <div class="modal-content">
-            <h3 id="result-title"></h3>
-            <p id="result-message"></p>
-            <p id="result-points"></p>
-            <button id="close-results" class="btn primary-btn">Continue</button>
+            <h3 id="result-category" style="color: #2563eb;"></h3>
+            <p id="result-message" style="margin: 16px 0;"></p>
+            <p id="result-points" style="font-weight: bold;"></p>
+            <button id="close-results" class="btn btn-primary">Continue</button>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <script>
+        // ==================== DATA STORAGE ====================
+        let userData = {
+            username: '',
+            grade: '',
+            points: 0,
+            badges: [],
+            subjects: [],
+            searches: [],
+            answers: {},
+            reflections: [],
+            reflectionScore: 0
+        };
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('aibalance');
+            if (saved) {
+                try {
+                    userData = JSON.parse(saved);
+                } catch (e) {
+                    console.log('Error loading data');
+                }
+            }
+            updatePoints();
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('aibalance', JSON.stringify(userData));
+        }
+
+        // Add points
+        function addPoints(points) {
+            userData.points += points;
+            checkBadges();
+            saveData();
+            updatePoints();
+        }
+
+        // Check and award badges
+        function checkBadges() {
+            if (Object.keys(userData.answers).length >= 3 && !userData.badges.includes('Independent Thinker')) {
+                userData.badges.push('Independent Thinker');
+            }
+            if (userData.searches.length >= 10 && !userData.badges.includes('Knowledge Seeker')) {
+                userData.badges.push('Knowledge Seeker');
+            }
+            if (userData.reflections.length >= 5 && !userData.badges.includes('Reflection Master')) {
+                userData.badges.push('Reflection Master');
+            }
+            if (userData.points >= 100 && !userData.badges.includes('Balance Keeper')) {
+                userData.badges.push('Balance Keeper');
+            }
+        }
+
+        // Update points display
+        function updatePoints() {
+            document.querySelectorAll('#points, #total-points').forEach(el => {
+                if (el) el.textContent = userData.points;
+            });
+        }
+
+        // ==================== SCREEN MANAGEMENT ====================
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+            
+            // Refresh screen data
+            if (screenId === 'dashboard') refreshDashboard();
+            if (screenId === 'subjects') refreshSubjects();
+            if (screenId === 'thinkfirst') refreshThinkFirst();
+            if (screenId === 'progress') refreshProgress();
+            if (screenId === 'assessment') resetAssessment();
+        }
+
+        window.changeScreen = showScreen;
+
+        // ==================== WELCOME SCREEN ====================
+        const usernameInput = document.getElementById('username');
+        const gradeSelect = document.getElementById('grade');
+        const startBtn = document.getElementById('start-btn');
+
+        function checkWelcomeInputs() {
+            startBtn.disabled = !(usernameInput.value.trim() && gradeSelect.value);
+        }
+
+        usernameInput.addEventListener('input', checkWelcomeInputs);
+        gradeSelect.addEventListener('change', checkWelcomeInputs);
+
+        startBtn.addEventListener('click', () => {
+            userData.username = usernameInput.value.trim();
+            userData.grade = gradeSelect.value;
+            saveData();
+            showScreen('subjects');
+        });
+
+        // ==================== SUBJECTS SCREEN ====================
+        const newSubject = document.getElementById('new-subject');
+        const addSubjectBtn = document.getElementById('add-subject');
+        const subjectsList = document.getElementById('subjects-list');
+        const continueBtn = document.getElementById('continue-to-dashboard');
+
+        function refreshSubjects() {
+            subjectsList.innerHTML = '';
+            if (userData.subjects.length === 0) {
+                subjectsList.innerHTML = '<p style="text-align: center; color: #64748b; padding: 40px;">No subjects yet. Add your first subject!</p>';
+                continueBtn.disabled = true;
+                return;
+            }
+            
+            userData.subjects.forEach(subject => {
+                const div = document.createElement('div');
+                div.className = 'subject-item';
+                div.innerHTML = `
+                    <span>${subject}</span>
+                    <button onclick="removeSubject('${subject}')"><i class="fas fa-times"></i></button>
+                `;
+                subjectsList.appendChild(div);
+            });
+            continueBtn.disabled = false;
+        }
+
+        window.removeSubject = (subject) => {
+            userData.subjects = userData.subjects.filter(s => s !== subject);
+            saveData();
+            refreshSubjects();
+        };
+
+        addSubjectBtn.addEventListener('click', () => {
+            const subject = newSubject.value.trim();
+            if (subject && !userData.subjects.includes(subject)) {
+                userData.subjects.push(subject);
+                saveData();
+                newSubject.value = '';
+                refreshSubjects();
+            }
+        });
+
+        continueBtn.addEventListener('click', () => {
+            if (userData.subjects.length > 0) {
+                showScreen('dashboard');
+            }
+        });
+
+        // ==================== DASHBOARD SCREEN ====================
+        function refreshDashboard() {
+            document.getElementById('stat-subjects').textContent = userData.subjects.length;
+            document.getElementById('stat-searches').textContent = userData.searches.length;
+            document.getElementById('stat-badges').textContent = userData.badges.length;
+            
+            const recent = document.getElementById('recent-activity');
+            if (userData.searches.length > 0) {
+                const last = userData.searches[userData.searches.length - 1];
+                recent.innerHTML = `Last search: ${last.subject} - "${last.query}"`;
+            } else {
+                recent.innerHTML = 'No activity yet';
+            }
+        }
+
+        // ==================== THINK FIRST SCREEN ====================
+        const thinkSubject = document.getElementById('think-subject');
+        const thinkQuery = document.getElementById('think-query');
+        const userAnswer = document.getElementById('user-answer');
+        const submitAnswerBtn = document.getElementById('submit-answer');
+        const searchBtn = document.getElementById('search-knowledge');
+        const infoResult = document.getElementById('info-result');
+        const infoTitle = document.getElementById('info-title');
+        const infoContent = document.getElementById('info-content');
+        const infoSource = document.getElementById('info-source');
+
+        function refreshThinkFirst() {
+            thinkSubject.innerHTML = '<option value="">Select Subject</option>';
+            userData.subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                thinkSubject.appendChild(option);
+            });
+            thinkQuery.value = '';
+            userAnswer.value = '';
+            infoResult.style.display = 'none';
+        }
+
+        submitAnswerBtn.addEventListener('click', () => {
+            const subject = thinkSubject.value;
+            const query = thinkQuery.value.trim();
+            const answer = userAnswer.value.trim();
+
+            if (!subject || !query || !answer) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            const key = `${subject}:${query}`;
+            userData.answers[key] = {
+                answer,
+                timestamp: new Date().toISOString()
+            };
+            addPoints(5);
+            alert(`✓ Answer saved! +5 points`);
+            userAnswer.value = '';
+        });
+
+        // Simple knowledge base
+        const knowledgeBase = {
+            'math:algebra': 'Algebra uses letters (like x and y) to represent unknown numbers in equations.',
+            'math:geometry': 'Geometry studies shapes, sizes, and properties of space.',
+            'math:calculus': 'Calculus studies how things change continuously.',
+            'science:physics': 'Physics studies matter, energy, and their interactions.',
+            'science:chemistry': 'Chemistry studies substances and their reactions.',
+            'science:biology': 'Biology studies living organisms and life processes.',
+            'history:ancient': 'Ancient history covers early civilizations up to 500 CE.',
+            'history:world': 'World history studies human history across the globe.',
+            'language:grammar': 'Grammar is the set of rules for using a language.',
+            'language:writing': 'Writing is expressing ideas through text.'
+        };
+
+        searchBtn.addEventListener('click', async () => {
+            const subject = thinkSubject.value;
+            const query = thinkQuery.value.trim();
+
+            if (!subject || !query) {
+                alert('Please select subject and enter query');
+                return;
+            }
+
+            // Show loading
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
+
+            // Simulate search delay
+            setTimeout(() => {
+                // Try to find in knowledge base
+                const key = `${subject.toLowerCase()}:${query.toLowerCase()}`;
+                let content = knowledgeBase[key];
+                
+                if (!content) {
+                    // Try partial match
+                    for (let [k, v] of Object.entries(knowledgeBase)) {
+                        if (k.includes(subject.toLowerCase()) && query.toLowerCase().includes(k.split(':')[1])) {
+                            content = v;
+                            break;
+                        }
+                    }
+                }
+
+                if (!content) {
+                    content = `To learn about "${query}" in ${subject}:
+
+📚 Here are some steps:
+1. Think about what you already know
+2. Write down questions you have
+3. Look for patterns and examples
+4. Try to explain it in your own words
+
+🔍 You can find more information:
+• Check your textbooks
+• Ask your teacher
+• Use educational websites
+• Visit your library
+
+💡 Remember: Learning takes time and practice!`;
+                }
+
+                // Display result
+                infoTitle.textContent = `${subject}: ${query}`;
+                infoContent.textContent = content;
+                infoSource.textContent = 'Source: Learning Guide';
+                infoResult.style.display = 'block';
+
+                // Save search
+                userData.searches.push({
+                    subject,
+                    query,
+                    timestamp: new Date().toISOString()
+                });
+                addPoints(2);
+
+                // Check if user answered this
+                const key2 = `${subject}:${query}`;
+                if (userData.answers[key2]) {
+                    showReflectionModal(subject, query);
+                }
+
+                // Reset button
+                searchBtn.disabled = false;
+                searchBtn.innerHTML = '<i class="fas fa-search"></i> Get Information';
+            }, 1000);
+        });
+
+        // ==================== REFLECTION MODAL ====================
+        const reflectionModal = document.getElementById('reflection-modal');
+        const reflectionInput = document.getElementById('reflection-input');
+        const saveReflection = document.getElementById('save-reflection');
+        const skipReflection = document.getElementById('skip-reflection');
+
+        let currentReflectionSubject = '';
+        let currentReflectionQuery = '';
+
+        function showReflectionModal(subject, query) {
+            currentReflectionSubject = subject;
+            currentReflectionQuery = query;
+            reflectionInput.value = '';
+            reflectionModal.classList.add('active');
+        }
+
+        saveReflection.addEventListener('click', () => {
+            const reflection = reflectionInput.value.trim();
+            if (reflection) {
+                userData.reflections.push({
+                    subject: currentReflectionSubject,
+                    query: currentReflectionQuery,
+                    reflection,
+                    timestamp: new Date().toISOString()
+                });
+                addPoints(10);
+                alert('✓ Reflection saved! +10 points');
+            }
+            reflectionModal.classList.remove('active');
+        });
+
+        skipReflection.addEventListener('click', () => {
+            reflectionModal.classList.remove('active');
+        });
+
+        // ==================== ASSESSMENT SCREEN ====================
+        const questions = [
+            "I try to solve problems myself before seeking help.",
+            "I reflect on what I learn from information I find.",
+            "I set limits on my learning time.",
+            "I verify information from multiple sources.",
+            "I take notes while learning.",
+            "I ask questions when I don't understand.",
+            "I connect new information to what I already know."
+        ];
+
+        let currentQuestion = 0;
+        let assessmentAnswers = [];
+
+        function resetAssessment() {
+            currentQuestion = 0;
+            assessmentAnswers = [];
+            showQuestion(0);
+        }
+
+        function showQuestion(index) {
+            document.getElementById('question-counter').textContent = `${index + 1}/7`;
+            document.getElementById('question-text').textContent = questions[index];
+            
+            const answers = ['Never', 'Sometimes', 'Often', 'Always'];
+            const container = document.getElementById('answer-buttons');
+            container.innerHTML = '';
+            
+            answers.forEach(answer => {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.style.background = '#e2e8f0';
+                btn.textContent = answer;
+                btn.onclick = () => selectAnswer(answer);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(answer) {
+            assessmentAnswers.push(answer);
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                calculateResults();
+            }
+        }
+
+        function calculateResults() {
+            const scoreMap = { 'Never': 1, 'Sometimes': 2, 'Often': 3, 'Always': 4 };
+            const total = assessmentAnswers.reduce((sum, a) => sum + (scoreMap[a] || 0), 0);
+            const percentage = (total / 28) * 100;
+
+            let category, message;
+            if (percentage >= 80) {
+                category = '🌟 Excellent Learner!';
+                message = "You're doing great! Keep challenging yourself.";
+            } else if (percentage >= 60) {
+                category = '👍 Good Learner';
+                message = "You're on the right track. Keep reflecting!";
+            } else {
+                category = '📚 Growing Learner';
+                message = "Every day is a chance to learn more!";
+            }
+
+            const points = Math.floor(percentage / 5);
+            addPoints(points);
+
+            document.getElementById('result-category').textContent = category;
+            document.getElementById('result-message').textContent = message;
+            document.getElementById('result-points').textContent = `+${points} points earned!`;
+            document.getElementById('results-modal').classList.add('active');
+        }
+
+        // ==================== PROGRESS SCREEN ====================
+        function refreshProgress() {
+            document.getElementById('total-points').textContent = userData.points;
+            document.getElementById('total-subjects').textContent = userData.subjects.length;
+            document.getElementById('total-searches').textContent = userData.searches.length;
+            document.getElementById('total-reflections').textContent = userData.reflections.length;
+            
+            const badgesList = document.getElementById('badges-list');
+            if (userData.badges.length > 0) {
+                badgesList.innerHTML = userData.badges.map(b => 
+                    `<span class="badge"><i class="fas fa-trophy"></i> ${b}</span>`
+                ).join('');
+            } else {
+                badgesList.innerHTML = '<p style="color: #64748b;">No badges yet</p>';
+            }
+        }
+
+        // ==================== BACK BUTTONS ====================
+        document.querySelectorAll('.back-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                showScreen('dashboard');
+            });
+        });
+
+        // ==================== MODAL CLOSE ====================
+        document.getElementById('close-results').addEventListener('click', () => {
+            document.getElementById('results-modal').classList.remove('active');
+            showScreen('dashboard');
+        });
+
+        // ==================== INITIALIZE ====================
+        loadData();
+        
+        // Check if user exists
+        if (userData.username) {
+            showScreen('dashboard');
+        } else {
+            showScreen('welcome');
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
